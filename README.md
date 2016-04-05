@@ -14,10 +14,9 @@ of hocon configuration
 1. Add a dependency to your maven project (not in maven central for now, build and deploy yourself)
 
         <dependency>
-          <dependency>
               <groupId>com.github.zeldigas</groupId>
               <artifactId>spring-hocon-property-source</artifactId>
-              <version>0.1-SNAPSHOT</version>
+              <version>0.1</version>
         </dependency>
 
 2. In `META-INF/factories` file add the following line
