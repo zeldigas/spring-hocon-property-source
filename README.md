@@ -1,9 +1,10 @@
 # Spring Hocon PropertySourceLoader
 
 Project aims to add support for HOCON format in spring boot configuration files.
-YAML is great, but some people prefer HOCON more so it's great to have a choice.
+YAML is great, but some people prefer HOCON more so it's good to have a choice.
 
 There are 2 modules:
+
 1. spring-hocon-property-source - contains property source loader itself
 2. hocon-property-example - contains simple spring-boot-starter-web project with demonstration
 of hocon configuration
