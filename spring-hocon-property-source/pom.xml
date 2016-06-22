@@ -6,7 +6,7 @@
 
     <groupId>com.github.zeldigas</groupId>
     <artifactId>spring-hocon-property-source</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
 
     <name>Spring HOCON property source</name>
     <description>Property source loader for Spring that add support for HOCON format files as property sources

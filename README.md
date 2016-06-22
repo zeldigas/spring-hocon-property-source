@@ -11,7 +11,7 @@ of hocon configuration
 
 # How to use it in my spring boot code?
 
-1. Add a dependency to your maven project (not in maven central for now, build and deploy yourself)
+1. Add a dependency to your maven project
 
         <dependency>
               <groupId>com.github.zeldigas</groupId>
