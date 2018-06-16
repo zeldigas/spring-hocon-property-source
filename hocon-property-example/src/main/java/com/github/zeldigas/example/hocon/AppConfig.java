@@ -7,7 +7,7 @@ import java.net.URI;
 import java.util.Locale;
 
 @Component
-@ConfigurationProperties("myApp")
+@ConfigurationProperties("my-app")
 public class AppConfig {
 
     private String foo;
