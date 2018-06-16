@@ -4,10 +4,12 @@ import org.junit.Test;
 import org.springframework.boot.env.PropertySourceLoader;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.env.EnumerablePropertySource;
+import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -41,7 +43,9 @@ public class HoconPropertySourceLoaderTest {
         }
     }
 
-    private EnumerablePropertySource loadProperties(PropertySourceLoader hoconLoader, String path) throws IOException {
-        return (EnumerablePropertySource) hoconLoader.load("hocon", new ClassPathResource(path), null);
+    private EnumerablePropertySource loadProperties(PropertySourceLoader propertySourceLoader, String path) throws IOException {
+        List<PropertySource<?>> source = propertySourceLoader.load("hocon", new ClassPathResource(path));
+        assertThat("One property source expected", source.size(), is(1));
+        return (EnumerablePropertySource) source.get(0);
     }
 }

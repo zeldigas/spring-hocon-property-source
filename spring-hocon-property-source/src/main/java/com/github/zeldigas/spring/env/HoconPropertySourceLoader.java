@@ -8,7 +8,9 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,16 +26,15 @@ public class HoconPropertySourceLoader implements PropertySourceLoader {
     }
 
     @Override
-    public PropertySource<?> load(String name, Resource resource, String profile) throws IOException {
-        if (profile != null) {
-            return null;
-        }
+    public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
+        List<PropertySource<?>> propertySources= new ArrayList<>();
         Config config = ConfigFactory.parseReader(new InputStreamReader(resource.getInputStream()),
                 ConfigParseOptions.defaults().setSyntax(ConfigSyntax.CONF))
                 .resolve();
         LinkedHashMap<String, Object> properties = new LinkedHashMap<>();
         toFlatMap(properties, config);
-        return new MapPropertySource(name, properties);
+        propertySources.add(new MapPropertySource(name, properties));
+        return propertySources;
     }
 
     private void toFlatMap(LinkedHashMap<String, Object> properties, Config config) {
