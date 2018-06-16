@@ -11,12 +11,14 @@ of hocon configuration
 
 # How to use it in my spring boot code?
 
+**Version 0.2 is aimed for SpringBoot 2.0. For 1.x check version 0.1**
+
 1. Add a dependency to your maven project
 
         <dependency>
               <groupId>com.github.zeldigas</groupId>
               <artifactId>spring-hocon-property-source</artifactId>
-              <version>0.1</version>
+              <version>0.2</version>
         </dependency>
 
 2. In `META-INF/factories` file add the following line
