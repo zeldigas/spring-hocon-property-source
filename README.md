@@ -18,7 +18,7 @@ of hocon configuration
         <dependency>
               <groupId>com.github.zeldigas</groupId>
               <artifactId>spring-hocon-property-source</artifactId>
-              <version>0.2</version>
+              <version>0.2.1</version>
         </dependency>
 
 2. In `META-INF/factories` file add the following line
