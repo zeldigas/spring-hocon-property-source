@@ -8,6 +8,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ public class HoconPropertySourceLoader implements PropertySourceLoader {
     @Override
     public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
         List<PropertySource<?>> propertySources= new ArrayList<>();
-        Config config = ConfigFactory.parseReader(new InputStreamReader(resource.getInputStream()),
+        Config config = ConfigFactory.parseReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8),
                 ConfigParseOptions.defaults().setSyntax(ConfigSyntax.CONF))
                 .resolve();
         LinkedHashMap<String, Object> properties = new LinkedHashMap<>();
