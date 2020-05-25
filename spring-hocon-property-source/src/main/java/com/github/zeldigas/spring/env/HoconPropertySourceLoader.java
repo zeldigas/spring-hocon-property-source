@@ -1,18 +1,23 @@
 package com.github.zeldigas.spring.env;
 
-import com.typesafe.config.*;
-import org.springframework.boot.env.PropertySourceLoader;
-import org.springframework.core.env.MapPropertySource;
-import org.springframework.core.env.PropertySource;
-import org.springframework.core.io.Resource;
-
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.typesafe.config.*;
+import org.springframework.boot.env.OriginTrackedMapPropertySource;
+import org.springframework.boot.env.PropertySourceLoader;
+import org.springframework.boot.origin.Origin;
+import org.springframework.boot.origin.OriginTrackedValue;
+import org.springframework.boot.origin.TextResourceOrigin;
+import org.springframework.boot.origin.TextResourceOrigin.Location;
+import org.springframework.core.env.PropertySource;
+import org.springframework.core.io.Resource;
 
 /**
  * Strategy to load '.conf' files in
@@ -21,60 +26,71 @@ import java.util.Map;
  */
 public class HoconPropertySourceLoader implements PropertySourceLoader {
 
+    private static final ConfigParseOptions PARSE_OPTIONS =
+        ConfigParseOptions.defaults().setSyntax(ConfigSyntax.CONF);
+
     @Override
     public String[] getFileExtensions() {
-        return new String[]{"conf"};
+        return new String[] {"conf"};
     }
 
     @Override
     public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
-        List<PropertySource<?>> propertySources= new ArrayList<>();
-        Config config = ConfigFactory.parseReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8),
-                ConfigParseOptions.defaults().setSyntax(ConfigSyntax.CONF))
-                .resolve();
-        LinkedHashMap<String, Object> properties = new LinkedHashMap<>();
-        toFlatMap(properties, config);
-        propertySources.add(new MapPropertySource(name, properties));
-        return propertySources;
+        Map<String, Object> source = toFlatMap(resource, parseHoconFrom(resource));
+        return Collections.singletonList(
+            new OriginTrackedMapPropertySource(name, source)
+        );
     }
 
-    private void toFlatMap(LinkedHashMap<String, Object> properties, Config config) {
-        toFlatMap(properties, "", config);
+    private Config parseHoconFrom(Resource resource) throws IOException {
+        try (InputStream inputStream = resource.getInputStream();
+            InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+            return ConfigFactory.parseReader(reader, PARSE_OPTIONS).resolve();
+        }
     }
 
-    private void toFlatMap(Map<String, Object> properties, String key, Config config) {
-        final String prefix = "".equals(key) ? "" : key + ".";
+    private Map<String, Object> toFlatMap(Resource resource, Config config) {
+        Map<String, Object> properties = new LinkedHashMap<>();
+        toFlatMap(properties, "", resource, config);
+        return properties;
+    }
 
-        for (Map.Entry<String, ConfigValue> entry : config.entrySet()){
+    private void toFlatMap(Map<String, Object> properties, String parentKey, Resource resource, Config config) {
+        final String prefix = "".equals(parentKey) ? "" : parentKey + ".";
+
+        for (Map.Entry<String, ConfigValue> entry : config.entrySet()) {
             String propertyKey = prefix + entry.getKey();
-            ConfigValue value = entry.getValue();
-            addConfigValue(properties, propertyKey, value);
+            addConfigValuePropertyTo(properties, propertyKey, resource, entry.getValue());
         }
     }
 
-    private void addConfigValue(Map<String, Object> properties, String key, ConfigValue value) {
+    private void addConfigValuePropertyTo(Map<String, Object> properties, String key, Resource resource, ConfigValue value) {
         if (value instanceof ConfigList) {
-            processListValues(properties, key, (ConfigList) value);
+            processListValue(properties, key, resource, (ConfigList) value);
         } else if (value instanceof ConfigObject) {
-            processObjectValues(properties, key, (ConfigObject) value);
+            processObjectValue(properties, key, resource, (ConfigObject) value);
         } else {
-            addScalarValue(properties, key, value);
+            processScalarValue(properties, key, resource, value);
         }
     }
 
-    private void processListValues(Map<String, Object> properties, String key, ConfigList value) {
-        int i = 0;
-        for (ConfigValue element : value) {
-            addConfigValue(properties, String.format("%s[%d]", key, i++), element);
+    private void processListValue(Map<String, Object> properties, String key,
+        final Resource resource, ConfigList value) {
+        for (int i = 0; i < value.size(); i++) {
+            // Used to properly populate lists in @ConfigurationProperties beans
+            String propertyName = String.format("%s[%d]", key, i);
+            ConfigValue propertyValue = value.get(i);
+            addConfigValuePropertyTo(properties, propertyName, resource, propertyValue);
         }
     }
 
-    private void processObjectValues(Map<String, Object> properties, String key, ConfigObject value) {
-        toFlatMap(properties, key, value.toConfig());
+    private void processObjectValue(Map<String, Object> properties, String key, Resource resource, ConfigObject value) {
+        toFlatMap(properties, key, resource, value.toConfig());
     }
 
-    private void addScalarValue(Map<String, Object> properties, String key, ConfigValue value) {
+    private void processScalarValue(Map<String, Object> properties, String key, Resource resource, ConfigValue value) {
         properties.put(key, value.unwrapped());
+        Origin origin = new TextResourceOrigin(resource, new Location(value.origin().lineNumber() - 1, 0));
+        properties.put(key, OriginTrackedValue.of(value.unwrapped(), origin));
     }
-
 }
