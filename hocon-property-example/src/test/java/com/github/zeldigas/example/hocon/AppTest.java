@@ -35,6 +35,6 @@ public class AppTest {
                 .block();
 
 
-        assertThat(result, sameJSONAs("{\"foo\":\"Hello\",\"bar\":42,\"aUri\":\"https://example.org/hello\",\"targetLocale\":\"en_US\",\"configuration\":{\"endpoints\":[\"one\",\"two\",\"three\"],\"connectionSettings\":{\"one\":\"hello\"}}}"));
+        assertThat(result, sameJSONAs("{\"foo\":\"Hello\",\"bar\":42,\"aUri\":\"https://example.org/hello\",\"targetLocale\":\"en-us\",\"configuration\":{\"endpoints\":[\"one\",\"two\",\"three\"],\"connectionSettings\":{\"one\":\"hello\"}}}"));
     }
 }
