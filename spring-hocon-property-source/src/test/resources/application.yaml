@@ -21,3 +21,5 @@ myApp:
       one: "hello"
       two:
         two_sub: "world!"
+
+empty.list: []
