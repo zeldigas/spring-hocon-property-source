@@ -75,6 +75,7 @@ public class HoconPropertySourceFactory implements PropertySourceFactory {
     private void processListValue(Map<String, Object> properties, String key, Resource resource, ConfigList value) {
         if (value.isEmpty()) {
             addConfigValuePropertyTo(properties, key, resource, ConfigValueFactory.fromAnyRef(""));
+            return;
         }
 
         for (int i = 0; i < value.size(); i++) {

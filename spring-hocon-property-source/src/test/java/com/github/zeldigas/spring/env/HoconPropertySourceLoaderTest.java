@@ -44,7 +44,7 @@ public class HoconPropertySourceLoaderTest {
         }
     }
 
-    @SuppressWarnings("unchecked") 
+    @SuppressWarnings("unchecked")
     private <T extends PropertySource<?>> T loadProperties(PropertySourceLoader propertySourceLoader, String path) throws IOException {
         List<PropertySource<?>> source = propertySourceLoader.load("hocon", new ClassPathResource(path));
         assertThat("One property source expected", source.size(), is(1));
@@ -54,7 +54,7 @@ public class HoconPropertySourceLoaderTest {
     @Test
     public void propertyOriginIsCorrectlyDetermined() throws IOException {
         OriginTrackedMapPropertySource hoconParse = loadProperties(new HoconPropertySourceLoader(), "/application.conf");
-        
+
         verifyPropertyHasOriginOnLine(hoconParse, "spring.datasource.url", 3);
         verifyPropertyHasOriginOnLine(hoconParse, "server.port", 9);
         verifyPropertyHasOriginOnLine(hoconParse, "myApp.configuration.connectionSettings.two.two_sub", 20);

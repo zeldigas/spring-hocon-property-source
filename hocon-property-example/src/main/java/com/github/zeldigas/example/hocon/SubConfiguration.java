@@ -7,7 +7,7 @@ public class SubConfiguration {
 
     private List<String> endpoints;
 
-    private Map<String,Object> connectionSettings;
+    private Map<String, Object> connectionSettings;
 
     public List<String> getEndpoints() {
         return endpoints;

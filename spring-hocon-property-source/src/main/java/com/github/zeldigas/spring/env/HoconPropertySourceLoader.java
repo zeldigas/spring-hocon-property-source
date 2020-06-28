@@ -21,7 +21,7 @@ public class HoconPropertySourceLoader implements PropertySourceLoader {
 
     @Override
     public String[] getFileExtensions() {
-        return new String[] {"conf"};
+        return new String[]{"conf"};
     }
 
     @Override
