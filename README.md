@@ -11,14 +11,14 @@ of hocon configuration
 
 # How to use it in my spring boot code?
 
-**Version 0.2 is aimed for SpringBoot 2.0. For 1.x check version 0.1**
+**Version 0.4 is aimed for SpringBoot 2.2. For 1.x check version 0.1**
 
 1. Add a dependency to your maven project
 
         <dependency>
               <groupId>com.github.zeldigas</groupId>
               <artifactId>spring-hocon-property-source</artifactId>
-              <version>0.2.2</version>
+              <version>0.4.0</version>
         </dependency>
 
 2. In `META-INF/factories` file add the following line
@@ -27,3 +27,7 @@ of hocon configuration
 
 3. Place your HOCON configuration to *.conf files
 4. Enjoy!
+
+Alternatively you can use `@HoconPropertySource("my-hocon.conf")` annotation to load 
+specific file on classpath just like you can do with `@PropertySource` annotation for
+`*.properties` files.

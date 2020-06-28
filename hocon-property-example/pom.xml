@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.github.zeldigas</groupId>
             <artifactId>spring-hocon-property-source</artifactId>
-            <version>0.3.0</version>
+            <version>0.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
