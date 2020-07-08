@@ -21,12 +21,8 @@ of hocon configuration
               <version>0.4.0</version>
         </dependency>
 
-2. In `META-INF/factories` file add the following line
-
-        org.springframework.boot.env.PropertySourceLoader=com.github.zeldigas.spring.env.HoconPropertySourceLoader
-
-3. Place your HOCON configuration to *.conf files
-4. Enjoy!
+2. Place your HOCON configuration to *.conf files
+3. Enjoy!
 
 Alternatively you can use `@HoconPropertySource("my-hocon.conf")` annotation to load 
 specific file on classpath just like you can do with `@PropertySource` annotation for
